@@ -4,7 +4,7 @@ from config import Config
 class Environment():
     def __init__(self, width: 4, 
                  height: 4, 
-                 allowClimbWithoutGold: False, 
+                 allowClimbWithoutGold: True, 
                  pitProb: 0.2,
                  debug=False):
         self.width = width
@@ -17,6 +17,7 @@ class Environment():
 
     def reset(self):
         self.__agent_orientation = Config.agent_default_orientation
+        self.agent_arrows_left = 1
         self.agent_has_the_gold = False
         self.wumpus_killed = False
         self.element_codes = self.__generate_element_codes()
@@ -40,27 +41,32 @@ class Environment():
                     "terminated": False}
         
         if self.actions[action] == "shoot":
-            percepts["reward"]+=-10+1
-            if self.__agent_orientation == "East":
-                if agent_location[0] == wumpus_location[0]:
-                    if agent_location[1] < wumpus_location[1]:
-                        percepts["scream"] = True
-                        self.wumpus_killed = True
-            elif self.__agent_orientation == "West":
-                if agent_location[0] == wumpus_location[0]:
-                    if agent_location[1] > wumpus_location[1]:
-                        percepts["scream"] = True
-                        self.wumpus_killed = True
-            elif self.__agent_orientation == "North":
-                if agent_location[1] == wumpus_location[1]:
-                    if agent_location[0] < wumpus_location[0]:
-                        percepts["scream"] = True
-                        self.wumpus_killed = True
-            elif self.__agent_orientation == "South":
-                if agent_location[1] == wumpus_location[1]:
-                    if agent_location[0] > wumpus_location[0]:
-                        percepts["scream"] = True
-                        self.wumpus_killed = True
+            if self.agent_arrows_left > 0:
+                self.agent_arrows_left-=1
+                if self.__agent_orientation == "East":
+                    if agent_location[0] == wumpus_location[0]:
+                        if agent_location[1] < wumpus_location[1]:
+                            percepts["scream"] = True
+                            self.wumpus_killed = True
+                            percepts["reward"]+=-10
+                elif self.__agent_orientation == "West":
+                    if agent_location[0] == wumpus_location[0]:
+                        if agent_location[1] > wumpus_location[1]:
+                            percepts["scream"] = True
+                            self.wumpus_killed = True
+                            percepts["reward"]+=-10
+                elif self.__agent_orientation == "North":
+                    if agent_location[1] == wumpus_location[1]:
+                        if agent_location[0] < wumpus_location[0]:
+                            percepts["scream"] = True
+                            self.wumpus_killed = True
+                            percepts["reward"]+=-10
+                elif self.__agent_orientation == "South":
+                    if agent_location[1] == wumpus_location[1]:
+                        if agent_location[0] > wumpus_location[0]:
+                            percepts["scream"] = True
+                            self.wumpus_killed = True
+                            percepts["reward"]+=-10
 
         elif self.actions[action] == "turn_left":
             if self.__agent_orientation == "East":
@@ -110,7 +116,7 @@ class Environment():
         elif self.actions[action] == "climb":
             if agent_location==[0,0]:
                 if self.agent_has_the_gold:
-                    percepts["reward"]+=1000+1
+                    percepts["reward"]+=1000
                     percepts["terminated"] = True
                 else:
                     if self.allowClimbWithoutGold:
@@ -136,12 +142,12 @@ class Environment():
         agent_location = self.__locations["agent"][0].copy()
         wumpus_location = self.__locations["wumpus"][0].copy()
         if agent_location in self.__locations["pit"]:
-            percepts["reward"] += -1000+1
+            percepts["reward"] += -1000
             percepts["terminated"] = True
 
         if agent_location in self.__locations["wumpus"]:
             if not self.wumpus_killed:
-                percepts["reward"] += -1000+1
+                percepts["reward"] += -1000
                 percepts["terminated"] = True
 
         if not self.agent_has_the_gold:
