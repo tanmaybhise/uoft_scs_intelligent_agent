@@ -1,0 +1,8 @@
+src/_docs
+wumpus/
+src/Agent/__pycache__/
+src/Notebooks
+src/Environment/__pycache__/
+src/__pycache__/
+src/Tests/__pycache__/
+.vscode/settings.json
