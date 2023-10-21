@@ -37,6 +37,7 @@ class Environment():
                     "glitter":False, 
                     "bump":False, 
                     "scream":False,
+                    "current_location": [[],None],
                     "reward": -1,
                     "terminated": False}
         
@@ -137,6 +138,7 @@ class Environment():
                                         "glitter":False, 
                                         "bump":False, 
                                         "scream":False,
+                                        "current_location": [[],None],
                                         "reward": 0,
                                         "terminated": False}):
         agent_location = self.__locations["agent"][0].copy()
@@ -174,6 +176,9 @@ class Environment():
                             [pit_loc[0], pit_loc[1]-1],
                             ]:
                 percepts["breeze"] = True
+        
+        percepts["current_location"][0] = agent_location
+        percepts["current_location"][1] = self.__agent_orientation
 
         return percepts
          
