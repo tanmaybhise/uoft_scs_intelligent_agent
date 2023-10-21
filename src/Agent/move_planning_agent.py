@@ -90,9 +90,9 @@ class MovePlanningAgent(Agent):
                 refernce_previous_location[1] = "West"
                 self.state.add_edge(str(refernce_current_location), 
                         str(refernce_previous_location))
-            elif refernce_current_location[1] == "North": #2,1 North
-                refernce_current_location[1] = "South" #2,1 South
-                refernce_previous_location[1] = "South" #1,1 South
+            elif refernce_current_location[1] == "North":
+                refernce_current_location[1] = "South"
+                refernce_previous_location[1] = "South"
                 self.state.add_edge(str(refernce_current_location), 
                         str(refernce_previous_location))
             elif refernce_current_location[1] == "South":
