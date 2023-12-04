@@ -39,7 +39,7 @@ class Environment():
                     "scream":False,
                     "current_location": [[],None],
                     "reward": -1,
-                    "terminated": False}
+                    "terminated": (False, None)}
         
         if self.actions[action] == "shoot":
             if self.agent_arrows_left > 0:
@@ -118,10 +118,10 @@ class Environment():
             if agent_location==[0,0]:
                 if self.agent_has_the_gold:
                     percepts["reward"]+=1000
-                    percepts["terminated"] = True
+                    percepts["terminated"] = (True, "climb")
                 else:
                     if self.allowClimbWithoutGold:
-                        percepts["terminated"] = True
+                        percepts["terminated"] = (True, "climb")
 
         else:
             raise NotImplementedError(f"action `{action}` is not recognized.\
@@ -140,17 +140,17 @@ class Environment():
                                         "scream":False,
                                         "current_location": [[],None],
                                         "reward": 0,
-                                        "terminated": False}):
+                                        "terminated": (False, None)}):
         agent_location = self.__locations["agent"][0].copy()
         wumpus_location = self.__locations["wumpus"][0].copy()
         if agent_location in self.__locations["pit"]:
             percepts["reward"] += -1000
-            percepts["terminated"] = True
+            percepts["terminated"] = (True, "pit")
 
         if agent_location in self.__locations["wumpus"]:
             if not self.wumpus_killed:
                 percepts["reward"] += -1000
-                percepts["terminated"] = True
+                percepts["terminated"] = (True, "wumpus")
 
         if not self.agent_has_the_gold:
             if agent_location in [
