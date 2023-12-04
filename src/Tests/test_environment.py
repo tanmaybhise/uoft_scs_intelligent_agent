@@ -77,7 +77,7 @@ def test_climb():
     env.step(0)
     percepts = env.step(5)
     assert env.agent_has_the_gold == True
-    assert percepts["terminated"] == True
+    assert percepts["terminated"][0] == True
     assert percepts["reward"] == 999
 
 def test_pit():
@@ -93,7 +93,7 @@ def test_pit():
     assert percepts["breeze"] == True
     env.step(2)
     percepts = env.step(0)
-    assert percepts["terminated"] == True
+    assert percepts["terminated"][0] == True
     assert percepts["reward"] == -1001
 
 def test_wumpus():
@@ -108,7 +108,7 @@ def test_wumpus():
     percepts = env.step(0)
     assert percepts["stench"] == True
     assert percepts["reward"] == -1001
-    assert percepts["terminated"] == True
+    assert percepts["terminated"][0] == True
 
 def _get_environment_object():
     env = Environment(width=4, 
